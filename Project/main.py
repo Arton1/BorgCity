@@ -1,6 +1,6 @@
-#/usr/bin/env python3.7
+import sys
 
-def func():
-    print("Hello world")
-
-func()
+print("Please, type in number of steps and then values for edges: ")
+steps_number = int(input())
+edge_cost = list(map(int, input().strip().split()[:steps_number]))
+print(edge_cost)
