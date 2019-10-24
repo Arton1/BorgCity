@@ -1,4 +1,5 @@
 import sys
+import graph
 
 if __name__ == "__main__":
     print("Please, type in number of steps and then values for edges: ")
