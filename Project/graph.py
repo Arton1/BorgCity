@@ -1,24 +1,22 @@
 class Graph:
     def __init__(self):
-        self._vertices = [Vertex()]
+        self._vertices = []
 
-    def printVertices(self):
-        print(_vertices)
+    def print_vertices(self):
+        print(self._vertices)
     
-    def addVertex(self):
-        self._vertices.append(Vertex())
+    def add_vertex(self, *edges):
+        vertex_index = len(self._vertices)
+        self._vertices.append({*edges})
+        for (adjacent_vertex_index, edge_value) in edges:
+            other_side_edge = (vertex_index, edge_value)
+            if adjacent_vertex_index < len(self._vertices):
+                self._vertices[adjacent_vertex_index].append(other_side_edge)
+            else:
+                self._vertices.append({other_side_edge})
 
+    def add_edge(self, first_vertex, second_vertex):
         pass
 
-    def clone(self):
-        return clone
-
-class Vertex:
-    def __init__(self, list_of_edges = []):
-        self._edges = list_of_edges
-
-class Edge:
-    def __init__(self, left_vertex, right_vertex, value):
-        self._vertices = (left_vertex, right_vertex)
-        self._value = value
-
+    def copy_(self):
+        pass
