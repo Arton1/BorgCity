@@ -5,38 +5,31 @@ class Graph:
     def print_vertices(self):
         print(self._vertices)
     
+    def _add_edge_to_vertex(self, vertex_target, vertex_to_add, value):
+        if value < 0:
+            raise ValueError(f"Edge value: {value} < 0")
+        if vertex_target == vertex_to_add:
+            raise ValueError("Vertex can't point to himself")
+        edge = (vertex_to_add, value)
+        if vertex_target < len(self._vertices):
+            if not all(vertex_to_add != edge[0] for edge in self._vertices[vertex_target]):
+                raise ValueError(f"There already exists an edge from {vertex_target} to {vertex_to_add}")
+            self._vertices[vertex_target].add(edge)
+        else:
+            if vertex_target == len(self._vertices):
+                self._vertices.append({edge})
+            else:
+                raise ValueError(f"Wrong vertex target: {vertex_target}")
+
     def add_vertex(self, *edges):
-        # Adds vertex to graph first, and then updates adjactent vertices.
-        # If adjacent vertex doesn't exist, checks the index correctness and
-        # appends the vertex.
-        # Adjacent vertex index is correct if the vertex already exists or
-        # the index is the same number as the size of _vertices.
         vertex_index = len(self._vertices)
         self._vertices.append({*edges})
         for (adjacent_vertex_index, edge_value) in edges:
-            if adjacent_vertex_index > len(self._vertices):
-                raise ValueError("Error: Wrong vertex index")
-            if edge_value < 0:
-                raise ValueError("Error: Edge value < 0")
-            other_side_edge = (vertex_index, edge_value)
-            if adjacent_vertex_index < len(self._vertices):
-                self._vertices[adjacent_vertex_index].append(other_side_edge)
-            else:
-                self._vertices.append({other_side_edge})
+            self._add_edge_to_vertex(adjacent_vertex_index, vertex_index, edge_value)
 
     def add_edge(self, first_vertex, second_vertex, value):
-        if first_vertex > len(self._vertices)
-            or second_vertex > len(self._vertices)
-            or first_vertes == second_vertex
-            or value < 0:
-                raise ValueError("Error: Wrong values")
-        def add_edge_to_vertex(vertex_target, vertex_to_add):
-            if vertex_target < len(self._vertices):
-                self._vertices[vertex_target].add((vertex_to_add, value))
-            else:
-                self._vertices.append((vertex_to_add, value))
-        addEdgeToVertex(first_vertex, second_vertex)
-        addEdgeToVertex(second_vertex, first_vertex)
+        self._add_edge_to_vertex(first_vertex, second_vertex, value)
+        self._add_edge_to_vertex(second_vertex, first_vertex, value)
 
     def copy_(self):
         pass

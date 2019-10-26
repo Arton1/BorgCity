@@ -10,5 +10,5 @@ if __name__ == "__main__":
     # edge_cost = list(map(int, input().strip().split()[:steps_number]))
     # print(edge_cost)
     graph = graph.Graph()
-    graph.add_vertex((1, 1), (2, 3))
+    graph.add_vertex((1, 2), (2, 4), (3, 5))
     graph.print_vertices()
