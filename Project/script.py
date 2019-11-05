@@ -12,3 +12,5 @@ if __name__ == "__main__":
     graph = graph.Graph()
     graph.add_vertex((1, 2), (2, 4), (3, 5))
     graph.print_vertices()
+    graph.expand()
+    graph.print_vertices()

@@ -31,5 +31,12 @@ class Graph:
         self._add_edge_to_vertex(first_vertex, second_vertex, value)
         self._add_edge_to_vertex(second_vertex, first_vertex, value)
 
-    def copy_(self):
-        pass
+    def expand(self, steps=1):
+        #City growth
+        initial_size = len(self._vertices)
+        for copy_step in range(1, 4):
+            for vertex in self._vertices[:initial_size]:
+                vertex_copy = set()    
+                for (vertex_index, value) in vertex:
+                    vertex_copy.add((vertex_index + initial_size*copy_step, value))
+                self._vertices.append(vertex_copy)
