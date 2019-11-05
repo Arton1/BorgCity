@@ -13,5 +13,4 @@ if __name__ == "__main__":
     edge_cost = [3, 1]
     graph = graph.Graph()
     graph.expand(edge_cost)
-    graph.expand(edge_cost)
     graph.print_vertices()

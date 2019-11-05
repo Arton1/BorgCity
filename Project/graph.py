@@ -68,3 +68,9 @@ class Graph:
             (len(self._vertices) - 1, expansion_edge_cost),
             )
         self._expansion_count += 1
+        
+    def count_costs_dfs(self) -> int:
+        paths_sum = 0
+        edge_stack = []
+        vertex = self._vertices[0]
+        current_path_cost = 0
