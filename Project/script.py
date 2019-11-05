@@ -9,8 +9,9 @@ if __name__ == "__main__":
     # steps_number = int(input())
     # edge_cost = list(map(int, input().strip().split()[:steps_number]))
     # print(edge_cost)
+    steps_number = 1
+    edge_cost = [3, 1]
     graph = graph.Graph()
-    graph.add_vertex((1, 2), (2, 4), (3, 5))
-    graph.print_vertices()
-    graph.expand()
+    graph.expand(edge_cost)
+    graph.expand(edge_cost)
     graph.print_vertices()
