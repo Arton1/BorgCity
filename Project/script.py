@@ -12,6 +12,8 @@ if __name__ == "__main__":
     steps_number = 1
     edge_cost = [3, 1]
     graph = graph.Graph()
-    graph.expand(edge_cost)
-    graph.expand(edge_cost)
+    # graph.add_vertex((1, 1), (2, 5))
+    # graph.add_edge(1, 2, 10)
+    graph.expand(3)
+    graph.expand(1)
     graph.print_vertices()

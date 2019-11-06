@@ -1,6 +1,8 @@
+import copy
 class Graph:
     class Vertex:
-        def __init__(self, *edges):
+        def __init__(self, index, *edges):
+            self._index = index
             self._edges = list(edges)
             self._visited = False
             
@@ -10,89 +12,108 @@ class Graph:
         def set_visited(self, value=True):
             self._visited = value
 
-        def add_edges(self, *edges):
-            self._edges.extend(edges)
+        def add_edge(self, vertex, cost):
+            edge = (vertex, cost)
+            self._edges.append(edge)
 
         def get_edges(self):
             return self._edges
         
-        def edge_exists(self, edge):
-            if not all( edge[0] != adjacent_vertex for (adjacent_vertex, cost) in self._edges):
+        def edge_exists(self, vertex):
+            if not all( vertex is not adjacent_vertex for (adjacent_vertex, cost) in self._edges):
                 return True
-
-        def get_copy(self, edges_shift=0):
-            vertex_copy = Graph.Vertex()
-            for (vertex_index, value) in self._edges:
-                vertex_copy.add_edges((vertex_index + edges_shift, value))
-            return vertex_copy
+            return False
 
         def get_edges_text(self):
-            return str(self._edges)
+            for_printing = []
+            for vertex, cost in self._edges:
+                for_printing.append((vertex.get_index(), cost))
+            return str(for_printing)
+        
+        def get_index(self):
+            return self._index
+        
+        def shift_index(self, shift):
+            self._index += shift
+
 
     def __init__(self):
-        self._vertices = [self.Vertex()]
+        self._vertices = [self.Vertex(0)]
         self._expansion_count = 0 
 
     def print_vertices(self):
         for vertex, index in zip(self._vertices, range(len(self._vertices))):
             print(f"{index}: " + vertex.get_edges_text())
-    
-    def _add_edge_to_vertex(self, vertex_target, vertex_to_add, value):
-        if value < 0:
-            raise ValueError(f"Edge value: {value} < 0")
-        if vertex_target == vertex_to_add:
-            raise ValueError("Vertex can't point to himself")
-        edge = (vertex_to_add, value)
-        if vertex_target < len(self._vertices):
-            if self._vertices[vertex_target].edge_exists(edge):
-                raise ValueError(
-                    f"There already exists an edge from " 
-                    f"{vertex_target} to {vertex_to_add}"
-                    )
-            self._vertices[vertex_target].add_edges(edge)
+
+    def get_vertex(self, index):
+        #Creates vertex if index equals size of graph
+        if index < len(self._vertices):
+            vertex = self._vertices[index]
         else:
-            if vertex_target == len(self._vertices):
-                self._vertices.append(self.Vertex(edge))
+            if index == len(self._vertices):
+                vertex = self.Vertex(len(self._vertices))
+                self._vertices.append(vertex)
             else:
-                raise ValueError(f"Wrong vertex target: {vertex_target}")
+                raise ValueError(f"Wrong vertex index: {index}")
+        return vertex
+
+    def _add_edge_to_vertices(self, vertex_target_index, vertex_to_add_index, cost):
+        if cost < 0:
+            raise ValueError(f"Edge cost: {cost} < 0")
+        if vertex_target_index == vertex_to_add_index:
+            raise ValueError("Vertex can't point to himself")
+        vertex_target = self.get_vertex(vertex_target_index)
+        vertex_to_add = self.get_vertex(vertex_to_add_index)
+        if vertex_target.edge_exists(vertex_to_add):
+            raise ValueError(f"There already exists an edge from {vertex_target} to {vertex_to_add}")
+        else:
+            vertex_target.add_edge(vertex_to_add, cost)
+            vertex_to_add.add_edge(vertex_target, cost)
 
     def add_vertex(self, *edges):
         vertex_index = len(self._vertices)
-        self._vertices.append(self.Vertex(*edges))
-        for (adjacent_vertex_index, edge_value) in edges:
-           self._add_edge_to_vertex(
-               adjacent_vertex_index, 
-                vertex_index, 
-                edge_value
+        for (adjacent_vertex_index, cost) in edges:
+           self._add_edge_to_vertices(
+                vertex_index,
+                adjacent_vertex_index,
+                cost,
                 )
 
-    def add_edge(self, first_vertex, second_vertex, edge_value):
-        self._add_edge_to_vertex(first_vertex, second_vertex, edge_value)
-        self._add_edge_to_vertex(second_vertex, first_vertex, edge_value)
+    def add_edge(self, first_vertex, second_vertex, cost):
+        self._add_edge_to_vertices(first_vertex, second_vertex, cost)
 
-    def expand(self, edge_costs, steps=1):
-        #City growth
-        #Clone graph 4 times and shift pointers of newly created graphs, so 
-        #all the graphs can be merged.
-        #Newly created bridge vertices are added after merging.
+    def add_clones(self, amount = 3):
+        # Able to optimize
         initial_size = len(self._vertices)
-        for copy_step in range(1, 4):
-            for vertex in self._vertices[:initial_size]:
-                self._vertices.append(vertex.get_copy(initial_size*copy_step))
-        expansion_edge_cost = edge_costs[self._expansion_count]
+        for clone_number in range(1, amount+1):
+            graph_copy = copy.deepcopy(self._vertices[:initial_size])
+            for vertex in graph_copy:
+                vertex.shift_index((clone_number)*initial_size)
+            self._vertices.extend(graph_copy)
+
+    def add_bridges(self, edges_cost, graph_prev_size):
         if self._expansion_count > 0:
             prev_bridge_vertices_count = 2
         else:
             prev_bridge_vertices_count = 0
         self.add_vertex(
-            (initial_size - prev_bridge_vertices_count - 1, expansion_edge_cost),
-            (initial_size*2 - prev_bridge_vertices_count - 1, expansion_edge_cost),  
+            (graph_prev_size - prev_bridge_vertices_count - 1, edges_cost),
+            (graph_prev_size*2 - prev_bridge_vertices_count - 1, edges_cost),  
             )
         self.add_vertex(
-            (initial_size*3 - prev_bridge_vertices_count - 1, expansion_edge_cost),
-            (initial_size*4 - prev_bridge_vertices_count - 1, expansion_edge_cost),
-            (len(self._vertices) - 1, expansion_edge_cost),
+            (graph_prev_size*3 - prev_bridge_vertices_count - 1, edges_cost),
+            (graph_prev_size*4 - prev_bridge_vertices_count - 1, edges_cost),
+            (len(self._vertices) - 1, edges_cost),
             )
+        
+    def expand(self, new_edges_cost):
+        #City growth
+        #Clone graph 4 times and change indexes of newly created vertices, so 
+        #all the graphs can be merged.
+        #Newly created bridge vertices are added after merging.
+        initial_size = len(self._vertices)
+        self.add_clones(3)
+        self.add_bridges(new_edges_cost, initial_size) 
         self._expansion_count += 1
         
     def count_costs_dfs(self) -> int:
