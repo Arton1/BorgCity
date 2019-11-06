@@ -1,8 +1,5 @@
 import sys
-import graph
-
-def func(*args):
-    print(args)
+from graph import Graph
 
 if __name__ == "__main__":
     # print("Please, type in number of steps and then values for edges: ")
@@ -10,10 +7,9 @@ if __name__ == "__main__":
     # edge_cost = list(map(int, input().strip().split()[:steps_number]))
     # print(edge_cost)
     steps_number = 1
-    edge_cost = [3, 1]
-    graph = graph.Graph()
-    # graph.add_vertex((1, 1), (2, 5))
-    # graph.add_edge(1, 2, 10)
-    graph.expand(3)
-    graph.expand(1)
+    edge_cost = [2, 1]
+    graph = Graph()
+    for index in range(steps_number):
+        graph.expand(edge_cost[index])
     graph.print_vertices()
+    print(graph.count_costs_dfs())

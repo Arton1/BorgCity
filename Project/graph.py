@@ -1,4 +1,5 @@
 import copy
+
 class Graph:
     class Vertex:
         def __init__(self, index, *edges):
@@ -36,6 +37,16 @@ class Graph:
         def shift_index(self, shift):
             self._index += shift
 
+        def all_edges_visited(self):
+            if all(vertex.is_visited() for (vertex, cost) in self._edges):
+                return True
+            return False
+
+        def get_unvisited_edge(self):
+            for vertex, cost in self._edges:
+                if(not vertex.is_visited()):
+                    return (vertex, cost)
+            return None
 
     def __init__(self):
         self._vertices = [self.Vertex(0)]
@@ -118,6 +129,26 @@ class Graph:
         
     def count_costs_dfs(self) -> int:
         paths_sum = 0
-        edge_stack = []
+        edges_stack = []
         vertex = self._vertices[0]
         current_path_cost = 0
+        while(True):
+            edge = vertex.get_unvisited_edge()
+            if edge is None:
+                if len(edges_stack)>0:
+                    vertex.set_visited()
+                    (prev_vertex, prev_cost) = edges_stack.pop()
+                    current_path_cost -= prev_cost
+                    vertex = prev_vertex
+                    continue
+                else:
+                    return paths_sum
+            (adjacent_vertex, cost) = edge
+            current_path_cost += cost
+            paths_sum += current_path_cost
+            edges_stack.append((vertex, cost))
+            vertex.set_visited()
+            vertex = adjacent_vertex
+            
+def print_info(vertex_index, adjacent_vertex_index, cost, paths_cum, current_path_cost):
+    print(str(vertex_index) + " -> " + str((adjacent_vertex_index, cost)))
