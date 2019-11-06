@@ -42,7 +42,7 @@ class Graph:
                 return True
             return False
 
-        def get_unvisited_edge(self):
+        def get_edge_to_visit(self):
             for vertex, cost in self._edges:
                 if(not vertex.is_visited()):
                     return (vertex, cost)
@@ -67,6 +67,10 @@ class Graph:
             else:
                 raise ValueError(f"Wrong vertex index: {index}")
         return vertex
+
+    def reset_as_unvisited(self):
+        for vertex in self._vertices:
+            vertex.set_visited(False)
 
     def _add_edge_to_vertices(self, vertex_target_index, vertex_to_add_index, cost):
         if cost < 0:
@@ -130,25 +134,29 @@ class Graph:
     def count_costs_dfs(self) -> int:
         paths_sum = 0
         edges_stack = []
-        vertex = self._vertices[0]
         current_path_cost = 0
-        while(True):
-            edge = vertex.get_unvisited_edge()
-            if edge is None:
-                if len(edges_stack)>0:
-                    vertex.set_visited()
-                    (prev_vertex, prev_cost) = edges_stack.pop()
-                    current_path_cost -= prev_cost
-                    vertex = prev_vertex
-                    continue
-                else:
-                    return paths_sum
-            (adjacent_vertex, cost) = edge
-            current_path_cost += cost
-            paths_sum += current_path_cost
-            edges_stack.append((vertex, cost))
-            vertex.set_visited()
-            vertex = adjacent_vertex
-            
+        for start_vertex in self._vertices:
+            vertex = start_vertex
+            while(True):
+                edge = vertex.get_edge_to_visit()
+                if edge is None:
+                    if len(edges_stack)>0:
+                        vertex.set_visited()
+                        (prev_vertex, prev_cost) = edges_stack.pop()
+                        current_path_cost -= prev_cost
+                        vertex = prev_vertex
+                        continue
+                    else:
+                        break 
+                (adjacent_vertex, cost) = edge
+                current_path_cost += cost
+                if(adjacent_vertex.get_index() > start_vertex.get_index()):
+                    paths_sum += current_path_cost
+                edges_stack.append((vertex, cost))
+                vertex.set_visited()
+                vertex = adjacent_vertex
+            self.reset_as_unvisited()
+        return paths_sum
+                
 def print_info(vertex_index, adjacent_vertex_index, cost, paths_cum, current_path_cost):
     print(str(vertex_index) + " -> " + str((adjacent_vertex_index, cost)))
