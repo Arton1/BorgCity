@@ -5,8 +5,8 @@ if __name__ == "__main__":
     # steps_number = int(input())
     # edge_cost = list(map(int, input().strip().split()[:steps_number]))
     # print(edge_cost)
-    steps_number = 2
-    edge_cost = [2, 1]
+    steps_number = 10
+    edge_cost = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     graph = Graph()
     for index in range(steps_number):
         graph.expand(edge_cost[index])
