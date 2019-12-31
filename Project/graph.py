@@ -160,7 +160,49 @@ class Graph:
                 vertex = adjacent_vertex
             self.reset_as_unvisited()
         return paths_sum
+    
+    def count_border_sum(self):
+        # For debugging
+        paths_sum = 0
+        edges_stack = []
+        current_path_cost = 0
+        vertex = self._vertices[0]
+        while(True):
+            edge = vertex.get_edge_to_visit()
+            if edge is None:
+                if len(edges_stack) > 0:
+                    vertex.set_visited()
+                    (prev_vertex, prev_cost) = edges_stack.pop()
+                    current_path_cost -= prev_cost
+                    vertex = prev_vertex
+                    continue
+                else:
+                    break
+            (adjacent_vertex, cost) = edge
+            current_path_cost += cost
+            paths_sum += current_path_cost
+            edges_stack.append((vertex, cost))
+            vertex.set_visited()
+            vertex = adjacent_vertex
+        self.reset_as_unvisited()
+        return paths_sum
 
 
 def print_info(vertex_index, adjacent_vertex_index, cost, paths_cum, current_path_cost):
     print(str(vertex_index) + " -> " + str((adjacent_vertex_index, cost)))
+
+
+def calculate_brute_force(steps_number, edge_costs):
+    graph = Graph()
+    for index in range(steps_number):
+        graph.expand(edge_costs[index])
+    # graph.print_vertices()
+    return graph.count_costs_dfs()
+
+
+def calculate_border(steps_number, edge_costs):
+    graph = Graph()
+    for index in range(steps_number):
+        graph.expand(edge_costs[index])
+    # graph.print_vertices()
+    return graph.count_border_sum()
