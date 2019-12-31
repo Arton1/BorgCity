@@ -108,20 +108,25 @@ class Graph:
                 vertex.shift_index((clone_number)*initial_size)
             self._vertices.extend(graph_copy)
 
+    def _calculate_vertices_amount(self, step=None):
+        if step is None:
+            step = self._steps_amount
+        if step < 0:
+            return 0
+        return int((5/3)*(4**step)-(2/3))
+
     def _add_bridges(self, edges_cost, graph_clone_size):
-        if self._expansion_count > 0:
-            prev_bridge_vertices_count = 2
-        else:
-            prev_bridge_vertices_count = 0
+        lesser_graph_clone_size = self._calculate_vertices_amount(self._expansion_count-1)
         self.add_vertex(
-            (graph_clone_size - prev_bridge_vertices_count - 1, edges_cost),
-            (graph_clone_size*2 - prev_bridge_vertices_count - 1, edges_cost),
+            (3*lesser_graph_clone_size, edges_cost),
+            (graph_clone_size + 3*lesser_graph_clone_size, edges_cost),
             )
         self.add_vertex(
-            (graph_clone_size*3 - prev_bridge_vertices_count - 1, edges_cost),
-            (graph_clone_size*4 - prev_bridge_vertices_count - 1, edges_cost),
+            (graph_clone_size*2 + 3*lesser_graph_clone_size, edges_cost),
+            (graph_clone_size*3 + 3*lesser_graph_clone_size, edges_cost),
             (len(self._vertices) - 1, edges_cost),
             )
+        # print([vertex.get_index() for vertex, cost in self._vertices[4]._edges])
 
     def expand(self, new_edges_cost):
         """City growth
@@ -182,6 +187,12 @@ class Graph:
             current_path_cost += cost
             paths_sum += current_path_cost
             edges_stack.append((vertex, cost))
+            print(f"Vertex index: {vertex.get_index()}")
+            print(f"Adjacent    : {adjacent_vertex.get_index()}")
+            print(f"Current path cost: {current_path_cost}")
+            print(f"Paths sum: {paths_sum}")
+            print([vertex.get_index() for vertex, cost in edges_stack])
+            print("------")
             vertex.set_visited()
             vertex = adjacent_vertex
         self.reset_as_unvisited()
