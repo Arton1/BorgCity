@@ -100,7 +100,6 @@ class Graph:
         self._add_edge_to_vertices(first_vertex, second_vertex, cost)
 
     def _add_clones(self, amount=3):
-        # Able to optimize
         initial_size = len(self._vertices)
         for clone_number in range(1, amount+1):
             graph_copy = copy.deepcopy(self._vertices[:initial_size])
@@ -207,13 +206,12 @@ def calculate_brute_force(steps_number, edge_costs):
     graph = Graph()
     for index in range(steps_number):
         graph.expand(edge_costs[index])
-    # graph.print_vertices()
     return graph.count_costs_dfs()
 
 
 def calculate_border(steps_number, edge_costs):
+    # for debugging
     graph = Graph()
     for index in range(steps_number):
         graph.expand(edge_costs[index])
-    # graph.print_vertices()
     return graph.count_border_sum()

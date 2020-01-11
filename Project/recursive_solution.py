@@ -35,3 +35,8 @@ class RecursiveSolution:
         vertices_amount = self.calculate_vertices_amount(step-1)
         sum = 4*self.calculate_path_sum(step-1)+(12*vertices_amount+8)*self.calculate_border_sum(step-1)+(16*vertices_amount**2+12*vertices_amount+1)*self._edge_costs[step-1]
         return sum
+
+
+def calculate_recursive(steps_number, edge_costs):
+    recursive_solution = RecursiveSolution(edge_costs, steps_number)
+    return recursive_solution.calculate_path_sum(steps_number)
