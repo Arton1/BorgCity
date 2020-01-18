@@ -1,4 +1,4 @@
-from recursive_solution import calculate_recursive
+from recursive_solution import calculate_recursively, calculate_iteratively
 from graph import calculate_brute_force
 
 if __name__ == "__main__":
@@ -8,5 +8,6 @@ if __name__ == "__main__":
     if(len(edge_cost) != steps_number):
         print("Please, type in the same amount of values as there are steps")
     else:
-        print(calculate_recursive(steps_number, edge_cost))
-        #print(calculate_brute_force(steps_number, edge_costs))
+        print(calculate_recursively(steps_number, edge_cost))
+        print(calculate_iteratively(steps_number, edge_cost))
+        print(calculate_brute_force(steps_number, edge_cost))

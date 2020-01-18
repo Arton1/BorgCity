@@ -3,6 +3,7 @@ import copy
 
 class Graph:
     class Vertex:
+
         def __init__(self, index, *edges):
             self._index = index
             self._edges = list(edges)
@@ -126,7 +127,7 @@ class Graph:
             (len(self._vertices) - 1, edges_cost),
             )
         # print([vertex.get_index() for vertex, cost in self._vertices[4]._edges])
-
+    
     def expand(self, new_edges_cost):
         """City growth
         Clone graph 4 times and change indexes of newly created vertices, so
