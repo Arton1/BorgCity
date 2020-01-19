@@ -43,7 +43,7 @@ if __name__ == "__main__":
     for i in range(krok*7):
         edge_costs.append(1)
     profiler = cProfile.Profile()
-    for step in range(krok, krok*7, krok):
+    for step in range(krok, krok*7+1, krok):
         for calculation in range(amount_of_calculations):
             if number_of_algorithm == 1:
                 solution = profile_calculate_iteratively(step, edge_costs, profiler)

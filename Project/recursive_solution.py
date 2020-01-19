@@ -33,7 +33,7 @@ class RecursiveSolution:
         sum = 4*self.calculate_path_sum_recursive(step-1)+(12*vertices_amount+8)*self.calculate_border_sum(step-1)+(16*vertices_amount**2+12*vertices_amount+1)*self._edge_costs[step-1]
         return sum
 
-    def calculate_path_sum(self, amount_of_steps, profiler):
+    def calculate_path_sum(self, amount_of_steps):
         sum = 0
         power = pow(4, amount_of_steps-1)
         vertices_amount = 1
@@ -55,4 +55,4 @@ def calculate_recursively(steps_number, edge_costs):
 
 def calculate_iteratively(steps_number, edge_costs):
     recursive_solution = RecursiveSolution(edge_costs, steps_number)
-    return recursive_solution.calculate_path_sum(steps_number, profiler)
+    return recursive_solution.calculate_path_sum(steps_number)
