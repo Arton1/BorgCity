@@ -2,7 +2,7 @@ from recursive_solution import calculate_recursively, calculate_iteratively
 from graph import calculate_brute_force
 
 if __name__ == "__main__":
-    print("Please, type in number of algorythim that you want to calculate the value with")
+    print("Please, type in number of algorithm that you want to calculate the value with")
     print("1 - algorithm using iterative formulas")
     print("2 - algorithm using recursive formulas")
     print("3 - algorithm using Depth First Search")

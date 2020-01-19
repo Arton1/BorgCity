@@ -35,7 +35,7 @@ class RecursiveSolution:
 
     def calculate_path_sum(self, amount_of_steps, profiler):
         sum = 0
-        power = 4**(amount_of_steps-1)
+        power = pow(4, amount_of_steps-1)
         vertices_amount = 1
         border_sum = 0
         max_path = 0
