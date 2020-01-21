@@ -50,9 +50,10 @@ class Graph:
                     return (vertex, cost)
             return None
 
-    def __init__(self):
+    def __init__(self, memory_profiler=None):
         self._vertices = [self.Vertex(0)]
         self._expansion_count = 0
+        self._memory_profiler = memory_profiler
 
     def print_vertices(self):
         for vertex, index in zip(self._vertices, range(len(self._vertices))):
@@ -203,10 +204,12 @@ def print_info(vertex_index, adjacent_vertex_index, cost, paths_cum, current_pat
     print(str(vertex_index) + " -> " + str((adjacent_vertex_index, cost)))
 
 
-def calculate_brute_force(steps_number, edge_costs):
-    graph = Graph()
+def calculate_brute_force(steps_number, edge_costs, memory_profiler=None):
+    graph = Graph(memory_profiler)
     for index in range(steps_number):
         graph.expand(edge_costs[index])
+    if memory_profiler:
+        memory_profiler.save_memory_values(graph._vertices)
     return graph.count_costs_dfs()
 
 

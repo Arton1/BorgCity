@@ -1,10 +1,11 @@
 class RecursiveSolution:
-    def __init__(self, edge_costs, steps_amount=-1):
+    def __init__(self, edge_costs, steps_amount=-1, memory_profiler=None):
         if steps_amount < 0:
             self._steps_amount = len(edge_costs)
         else:
             self._steps_amount = steps_amount
         self._edge_costs = edge_costs
+        self._memory_profiler = memory_profiler
 
     def calculate_max_path(self, step):
         if step <= 0:
@@ -31,6 +32,8 @@ class RecursiveSolution:
             return 0
         vertices_amount = self.calculate_vertices_amount(step-1)
         sum = 4*self.calculate_path_sum_recursive(step-1)+(12*vertices_amount+8)*self.calculate_border_sum(step-1)+(16*vertices_amount**2+12*vertices_amount+1)*self._edge_costs[step-1]
+        if self._memory_profiler:
+            self._memory_profiler.save_memory_values(sum, vertices_amount, step)
         return sum
 
     def calculate_path_sum(self, amount_of_steps):
@@ -45,6 +48,8 @@ class RecursiveSolution:
             border_sum = 4*border_sum + (3*vertices_amount+2)*max_path + (8*vertices_amount+3)*self._edge_costs[step-1]
             max_path = 2*max_path + 3*self._edge_costs[step-1]
             vertices_amount = 4*vertices_amount+2
+        if self._memory_profiler:
+            self._memory_profiler.save_memory_values(sum, power, vertices_amount, border_sum, max_path)
         return int(sum)
 
 

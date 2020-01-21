@@ -16,6 +16,6 @@ if __name__ == "__main__":
         if(number_of_algorithm == 1):
             print(calculate_iteratively(steps_number, edge_cost))
         elif (number_of_algorithm == 2):
-            print(calculate_recursively(stps_number, edge_cost))
+            print(calculate_recursively(steps_number, edge_cost))
         else:
             print(calculate_brute_force(steps_number, edge_cost))
