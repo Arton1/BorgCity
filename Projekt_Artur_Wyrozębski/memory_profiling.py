@@ -1,7 +1,7 @@
 from recursive_solution import RecursiveSolution
 from graph import calculate_brute_force
 import sys
-
+import random
 
 class memory_profiler:
 
@@ -29,7 +29,10 @@ def get_input():
     return amount_of_target_expansions, krok
 
 def random_costs(amount_of_target_expansions, incrementing_step):
-    edge_cost = [random.randint(0, 25) for edge in range(incrementing_step*amount_of_target_expansions)]
+    print("Please, type in range of randomness. Type in minimum, hit enter, then maximum")
+    minimum = int(input("Min: "))
+    maximum = int(input("Max: "))
+    edge_cost = [random.randint(minimum, maximum) for edge in range(incrementing_step*amount_of_target_expansions)]
     return edge_cost
 
 def choose_type_of_input():
@@ -44,21 +47,25 @@ def choose_type_of_input():
     return func
 
 def only_ones(amount_of_target_expansions, incrementing_step):
-    print("Please, type in number of steps")
-    edge_cost = [1 for edge in range(11*incrementing_step)]
+    edge_cost = [1 for edge in range(amount_of_target_expansions*incrementing_step)]
     return edge_cost
 
-def print_table(values):
-    pass
+def print_table(values, asymptote):
+    median = int(len(values)/2)
+    step, memory, result = values[median]
+    factor = asymptote(step)/memory
+    print("Step Bytes   q(n)    Result")
+    for step, memory, result in values:
+        print(f"{step:4} {memory:<7} {memory*factor/asymptote(step):<7.4f} {result:<}")
 
-def profile(calculating_function):
+def profile(calculating_function, asymptote):
     get_edge_costs = choose_type_of_input()
     amount_of_target_expansions, incrementing_step = get_input()
     edge_costs = get_edge_costs(amount_of_target_expansions, incrementing_step)
     values = []
     prof = memory_profiler()
     for step in range(incrementing_step, incrementing_step*amount_of_target_expansions+1, incrementing_step):
-        calculating_function(step, edge_costs, memory_profiler=prof)
-        values = [(step, prof.get_sum_of_memory_values())]
+        result = calculating_function(step, edge_costs, memory_profiler=prof)
+        values.append((step, prof.get_sum_of_memory_values(), result))
         prof.clear_memory_value_holder()
-    print_table(values)
+    print_table(values, asymptote)

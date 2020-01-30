@@ -12,12 +12,18 @@ def choose_algorithm():
     print("3 - algorithm using Depth First Search")
     number_of_algorithm = int(input("Option: ")) 
     if( number_of_algorithm == 1):
-        func = calculate_iteratively
+        calculating_function = calculate_iteratively
+        time_asymptote = lambda x: x
+        memory_asymptote = lambda x: 1
     elif (number_of_algorithm == 2):
-        func = calculate_recursively
+        calculating_function = calculate_recursively
+        time_asymptote = lambda x: x**2
+        memory_asymptote = lambda x: x
     else:
-        func = calculate_brute_force
-    return func
+        calculating_function = calculate_brute_force
+        time_asymptote = lambda x: (4**x)**2
+        memory_asymptote = lambda x: 4**x
+    return calculating_function, time_asymptote, memory_asymptote
 
 def choose_type_of_input():
     print("Please, choose type of input for algorithm.")
@@ -41,11 +47,13 @@ def get_input_for_algorithm():
         raise Exception("Please, type in the same amount of values as there are steps")
     return edge_cost
 
-# Numbers from 0 to 25
 def random_input():
     print("Please, type in number of steps")
     steps_number = int(input("Steps: "))
-    edge_cost = [random.randint(0, 25) for edge in range(steps_number)]
+    print("Please, type in range of randomness. Type in minimum, hit enter, then maximum")
+    minimum = int(input("Min: "))
+    maximum = int(input("Max: "))
+    edge_cost = [random.randint(minimum, maximum) for edge in range(steps_number)]
     print(f"Edge costs: {edge_cost}")
     return edge_cost
 
@@ -68,10 +76,10 @@ if __name__ == "__main__":
     print("2 - profile execution time")
     print("3 - profile memory consumption")
     option = int(input("Option: "))
-    calculating_function = choose_algorithm()
+    calculating_function, time_asymptote, memory_asymptote = choose_algorithm()
     if option == 1:
         get_result(calculating_function)
     elif option == 2:
-        profiling.profile(calculating_function)
+        profiling.profile(calculating_function, time_asymptote)
     elif option == 3:
-        memory_profiling.profile(calculating_function)
+        memory_profiling.profile(calculating_function, memory_asymptote)
