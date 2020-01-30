@@ -7,7 +7,7 @@ if __name__ == "__main__":
     print("2 - algorithm using recursive formulas")
     print("3 - algorithm using Depth First Search")
     number_of_algorithm = int(input())
-    print("Please, type in number of steps and then values for edges: ")
+    print("Please, type in number of steps, hit enter and then values for edges: ")
     steps_number = int(input())
     edge_cost = list(map(int, input().strip().split()[:steps_number]))
     if(len(edge_cost) != steps_number):
